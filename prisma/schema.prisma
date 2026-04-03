@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadStatus {
+  NEW
+  DRAFTED
+  APPROVED
+  SENT
+  REPLIED
+  OPTED_OUT
+  BOUNCED
+}
+
+enum DraftStatus {
+  DRAFT
+  APPROVED
+  SENT
+  ARCHIVED
+}
+
+enum MessageDirection {
+  OUTBOUND
+  INBOUND
+}
+
+enum LeadBucket {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum SignalStrength {
+  LOW
+  MEDIUM
+  HIGH
+  UNKNOWN
+}
+
+enum WebsiteState {
+  NO_WEBSITE
+  WEAK_WEBSITE
+  DECENT_WEBSITE
+  UNKNOWN
+}
+
+enum RecommendedOffer {
+  LAUNCH_PAGE
+  SIMPLE_WEBSITE
+  REDESIGN_SPRINT
+}
+
+enum PriceBand {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum NextBestAction {
+  REVIEW_MANUALLY
+  CALL_FIRST
+  LINKEDIN_OUTREACH
+  CONTACT_FORM_MESSAGE
+  PREVIEW_WORTH_IT
+  LOW_PRIORITY_SKIP
+  ADD_BUSINESS_EMAIL_FIRST
+}
+
+enum OutreachChannel {
+  EMAIL
+  CALL
+  CONTACT_FORM
+  LINKEDIN
+  OTHER
+}
+
+enum OutreachOutcome {
+  NO_RESPONSE
+  REPLIED
+  INTERESTED
+  NOT_NOW
+  LOST
+}
+
+enum ChannelType {
+  PHONE
+  LINKEDIN
+  CONTACT_FORM
+  WARM_EMAIL
+  MANUAL_RESEARCH_FIRST
+  SKIP
+}
+
+enum ContactStatus {
+  NOT_STARTED
+  ATTEMPTED
+  REPLIED
+  WARM_LEAD
+  SKIPPED
+}
+
+enum WorkflowAction {
+  MAKE_CALL
+  SEND_LINKEDIN
+  SEND_CONTACT_FORM
+  SEND_WARM_EMAIL
+  DO_MANUAL_RESEARCH
+  FOLLOW_UP
+  REVIEW_REPLY
+  WAIT_FOR_REPLY
+  SKIP
+}
+
+model Lead {
+  id                   String            @id @default(cuid())
+  businessName         String
+  contactName          String?
+  email                String?           @unique
+  phone                String?
+  website              String?
+  city                 String?
+  niche                String?
+  sourceUrl            String?
+  notes                String?
+  googleRating         Float?
+  googleReviewCount    Int?
+  status               LeadStatus        @default(NEW)
+  icpFit               LeadBucket?
+  estimatedTicketValue LeadBucket?
+  ownerLedProbability  SignalStrength?
+  singleLocation       Boolean?
+  reviewStrength       SignalStrength?
+  websiteState         WebsiteState?
+  reachability         SignalStrength?
+  leadScore            Int               @default(0)
+  priorityBucket       LeadBucket?
+  scoreExplanation     String?
+  recommendedOffer     RecommendedOffer?
+  recommendedPriceBand PriceBand?
+  nextBestAction       NextBestAction?
+  recommendedChannel   ChannelType?
+  preferredChannel     ChannelType?
+  firstContactChannel  ChannelType?
+  channelReason        String?
+  contactStatus        ContactStatus?
+  lastChannelUsed      ChannelType?
+  firstContactAt       DateTime?
+  followUpDueAt        DateTime?
+  nextAction           WorkflowAction?
+  nextActionNotes      String?
+  qualificationNotes   String?
+  qualificationUpdatedAt DateTime?
+  outreachChannelUsed  OutreachChannel?
+  outreachOutcome      OutreachOutcome?
+  lostReason           String?
+  meetingBooked        Boolean           @default(false)
+  proposalSent         Boolean           @default(false)
+  dealWon              Boolean           @default(false)
+  dealValue            Int?
+  lastContactedAt      DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  analyses             WebsiteAnalysis[]
+  drafts               EmailDraft[]
+  messages             EmailMessage[]
+  activities           ActivityLog[]
+
+  @@unique([businessName, website])
+  @@index([businessName])
+  @@index([status])
+  @@index([city])
+  @@index([niche])
+  @@index([priorityBucket, leadScore])
+  @@index([recommendedOffer])
+  @@index([websiteState])
+  @@index([recommendedChannel])
+  @@index([contactStatus, followUpDueAt])
+}
+
+model Campaign {
+  id          String       @id @default(cuid())
+  name        String
+  targetNiche String?
+  targetCity  String?
+  offerAngle  String?
+  cta         String?
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  drafts      EmailDraft[]
+
+  @@index([isActive])
+  @@index([name])
+}
+
+model WebsiteAnalysis {
+  id              String   @id @default(cuid())
+  leadId          String
+  homepageTitle   String?
+  metaDescription String?
+  detectedIssues  String
+  summary         String
+  rawHtmlSnippet  String?
+  editorNotes     String?
+  analyzedAt      DateTime @default(now())
+  lead            Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId, analyzedAt])
+}
+
+model EmailDraft {
+  id                     String      @id @default(cuid())
+  leadId                 String
+  campaignId             String?
+  subject                String
+  body                   String
+  personalizationSummary String?
+  status                 DraftStatus @default(DRAFT)
+  followUpNumber         Int         @default(0)
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+  lead                   Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  campaign               Campaign?   @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  messages               EmailMessage[]
+
+  @@index([leadId, status])
+  @@index([campaignId])
+}
+
+model EmailMessage {
+  id              String           @id @default(cuid())
+  leadId          String
+  draftId         String?
+  resendMessageId String?
+  direction       MessageDirection
+  subject         String
+  body            String
+  sentAt          DateTime?
+  deliveryStatus  String?
+  createdAt       DateTime         @default(now())
+  lead            Lead             @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  draft           EmailDraft?      @relation(fields: [draftId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@index([direction, sentAt])
+}
+
+model SuppressionEntry {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  leadId    String?
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+  lead      Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@index([createdAt])
+}
+
+model AppSetting {
+  key   String @id
+  value String
+}
