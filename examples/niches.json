@@ -1,0 +1,51 @@
+{
+  "instalater": {
+    "label": "Instalatér / voda topení plyn",
+    "visual_tone": "trade",
+    "cta_type": "phone",
+    "copy_language": "semi-formal",
+    "section_order": ["hero", "services", "about", "testimonials", "contact"],
+    "trust_signals": [
+      "X let na trhu",
+      "Certifikát ČSN",
+      "Pojištění odpovědnosti",
+      "Člen Cechu instalatérů ČR"
+    ],
+    "mockup_vertical": "PLUMBER",
+    "mockup_kind": "trade",
+    "status": "live"
+  },
+  "stomatolog": {
+    "label": "Zubní klinika / stomatologie",
+    "visual_tone": "medical",
+    "cta_type": "booking",
+    "copy_language": "formal",
+    "section_order": ["hero", "services", "certifications", "testimonials", "contact"],
+    "trust_signals": [
+      "Člen České stomatologické komory",
+      "X let praxe",
+      "Digitální RTG na místě",
+      "Pojištění odpovědnosti",
+      "Recenze Google 4.8 hvězd"
+    ],
+    "mockup_vertical": "DENTAL",
+    "mockup_kind": "medical",
+    "status": "pending-vertical-type"
+  },
+  "fitness": {
+    "label": "Personal trainer / fitness studio",
+    "visual_tone": "wellness",
+    "cta_type": "booking",
+    "copy_language": "semi-formal",
+    "section_order": ["hero", "services", "about", "pricing", "testimonials", "contact"],
+    "trust_signals": [
+      "Certifikovaný trenér FISAF",
+      "X let s klienty",
+      "Specializace na [oblast]",
+      "Recenze Google"
+    ],
+    "mockup_vertical": "FITNESS",
+    "mockup_kind": "wellness",
+    "status": "pending-vertical-type"
+  }
+}

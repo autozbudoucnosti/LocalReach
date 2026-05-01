@@ -1,0 +1,72 @@
+[
+  {
+    "businessName": "Kovář & Syn Instalatérství",
+    "contactName": "Pavel Kovář",
+    "email": "office@kovar-instalateur.example.com",
+    "phone": "+420 555 000 111",
+    "website": "https://kovar-instalateur.example.com",
+    "city": "Brno",
+    "niche": "Instalatér",
+    "sourceUrl": "https://firmy.example.com/brno/instalater/kovar",
+    "googleRating": 4.7,
+    "googleReviewCount": 34,
+    "notes": "Rodinná firma. Web je funkční, ale špatně čitelný na mobilu.",
+    "status": "NEW"
+  },
+  {
+    "businessName": "Zubní klinika Novotný",
+    "contactName": "MUDr. Jana Novotná",
+    "email": "recepce@zubni-novotny.example.com",
+    "phone": "+420 555 000 222",
+    "website": "https://zubni-novotny.example.com",
+    "city": "Praha",
+    "niche": "Stomatolog",
+    "sourceUrl": "https://firmy.example.com/praha/stomatolog/novotny",
+    "googleRating": 4.9,
+    "googleReviewCount": 82,
+    "notes": "Výborné hodnocení. Web postrádá online objednávku.",
+    "status": "DRAFTED"
+  },
+  {
+    "businessName": "Fitness Centrum Pohyb",
+    "contactName": null,
+    "email": "info@fc-pohyb.example.com",
+    "phone": "+420 555 000 333",
+    "website": null,
+    "city": "Ostrava",
+    "niche": "Fitness studio",
+    "sourceUrl": "https://firmy.example.com/ostrava/fitness/pohyb",
+    "googleRating": 4.4,
+    "googleReviewCount": 21,
+    "notes": "Zatím nemá web. Vhodná nabídka: jednoduchá prezentační stránka.",
+    "status": "NEW"
+  },
+  {
+    "businessName": "Pekárna Rohlíček",
+    "contactName": "Věra Rohlíčková",
+    "email": "objednavky@pekarna-rohlicek.example.com",
+    "phone": "+420 555 000 444",
+    "website": "https://pekarna-rohlicek.example.com",
+    "city": "Brno",
+    "niche": "Pekárna",
+    "sourceUrl": "https://firmy.example.com/brno/pekarna/rohlicek",
+    "googleRating": 4.8,
+    "googleReviewCount": 57,
+    "notes": "Sezonní menu na webu není aktualizované. Nabídka na redesign.",
+    "status": "SENT"
+  },
+  {
+    "businessName": "Právní kancelář Blažek",
+    "contactName": null,
+    "email": "kancelar@blazek-law.example.com",
+    "phone": "+420 555 000 555",
+    "website": "https://blazek-law.example.com",
+    "city": "Ostrava",
+    "niche": "Advokát",
+    "sourceUrl": "https://firmy.example.com/ostrava/advokat/blazek",
+    "googleRating": 4.3,
+    "googleReviewCount": 9,
+    "notes": "Odhlásil se. Zapsáno do suppression listu.",
+    "status": "OPTED_OUT"
+  }
+]

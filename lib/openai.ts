@@ -23,12 +23,12 @@ type DraftGenerationArgs = {
 };
 
 type OutreachCase = "website_improvement" | "new_website" | "generic_outreach";
-const SIGNATURE_BLOCK = `Martin Kanócz
+const SIGNATURE_BLOCK = `[Sender Name]
 tvorba a úprava webů pro lokální firmy
 
-martinkanocz.dev
-martin@martinkanocz.dev
-Brno`;
+sender.example.com
+hello@sender.example.com
+[City]`;
 
 const SYSTEM_PROMPT = `You write low-volume, highly targeted cold outreach emails for local Czech businesses.
 
