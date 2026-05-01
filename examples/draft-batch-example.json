@@ -1,0 +1,32 @@
+{
+  "lead": {
+    "businessName": "Kovář & Syn Instalatérství",
+    "contactName": "Pavel Kovář",
+    "email": "office@kovar-instalateur.example.com",
+    "website": "https://kovar-instalateur.example.com",
+    "city": "Brno",
+    "niche": "Instalatér"
+  },
+  "websiteAnalysis": {
+    "homepageTitle": "Kovář & Syn – Instalatérství a topenářství Brno",
+    "metaDescription": "Rodinná instalatérská firma v Brně. Voda, topení, plyn.",
+    "summary": "Web je funkční, ale přehnaně textový a na mobilu hůře čitelný. Chybí výrazná výzva k akci pro havarijní kontakt.",
+    "detectedIssues": [
+      "Slabý CTA na mobilní verzi",
+      "Nepřehledná navigace na malém displeji",
+      "Chybí sekce s recenzemi zákazníků"
+    ]
+  },
+  "campaign": {
+    "name": "Lokální úprava webu",
+    "targetNiche": "Instalatér",
+    "targetCity": "Brno",
+    "offerAngle": "přehlednější mobilní verze",
+    "cta": "Mělo by pro Vás smysl, kdybych Vám poslal 2–3 krátké nápady k webu?"
+  },
+  "generatedDraft": {
+    "subject": "Nápad k webu – Kovář & Syn",
+    "body": "Dobrý den, pane Kováři,\n\nVšiml jsem si, že web Kovář & Syn nabízí solidní základ, ale na mobilu by mohl mít výraznější tlačítko pro havarijní kontakt – zákazníci ho v nouzi hledají jako první.\nPomáhám místním firmám upravit starší weby tak, aby se na nich lidé rychleji zorientovali.\nMělo by pro Vás smysl, kdybych Vám poslal 2–3 krátké nápady k webu?\n\n[Sender Name]\ntvorba a úprava webů pro lokální firmy\n\nsender.example.com\nhello@sender.example.com\n[City]\n\nPokud to pro Vás není relevantní, stačí odepsat, že nemáte zájem, a už se neozvu.",
+    "personalizationSummary": "Chybějící výrazný CTA pro havarijní kontakt na mobilní verzi."
+  }
+}
