@@ -1,49 +1,194 @@
-# LocalReach AI Automation Case Study
+# LocalReach
 
-LocalReach is a practical AI automation workflow for finding Czech local businesses, preparing personalized outreach drafts, validating them, and sending approved SMS messages through an operator-controlled pipeline.
+AI-assisted lead discovery and SMS outreach workflow for Czech local businesses.
 
-## What problem it solves
+LocalReach is a portfolio project that shows a practical agentic automation system, not just prompt generation. The system finds local businesses, prepares personalized Czech first-touch SMS drafts, validates the batch, requires human approval, sends approved messages through an SMS API, and tracks replies.
 
-Small businesses often have weak websites, but manual prospecting and outreach is repetitive. This project explores how AI agents can assist with discovery, draft generation, quality checks, and operator approval.
+## Problem
 
-## Core workflow
+Small local businesses often have weak, outdated, or hard-to-use websites. Finding these leads, checking their websites, preparing a relevant first-touch message, and tracking follow-up is repetitive manual work.
 
-1. Discover local business leads
-2. Score and filter leads
-3. Generate Czech first-touch SMS drafts
-4. Write drafts into a structured JSON batch
-5. Materialize the batch into an approval queue
-6. Human approves selected messages
-7. SMS is sent through API
-8. Replies are tracked and routed to handoff
+LocalReach explores how AI agents can support that workflow while keeping the risky step — sending outreach — under human control.
 
-## Why this is not just prompting
+## What the system does
 
-The project includes:
-- structured data handoff between agents and backend
-- validation guards
-- stale-file protection
+1. Discovers Czech local business leads.
+2. Classifies the opportunity, for example weak website, poor contact flow, or missing website.
+3. Generates short Czech outreach drafts using vykání.
+4. Writes the selected SMS-ready leads into a structured JSON batch.
+5. Materializes the JSON batch into an approval queue.
+6. Lets the operator approve or reject each message.
+7. Sends only approved messages through the SMS API.
+8. Logs sends and tracks replies.
+
+## Why this is more than prompting
+
+The main value is the workflow around the model output:
+
+- agent routines for discovery, drafting, review, and operations control
+- structured JSON handoff between agents and the backend
+- manual approval before any SMS is sent
+- stale-file protection so old batches are not resent by accident
 - placeholder phone protection
-- manual approval before sending
-- send logs
+- message validation before materialization
+- approval queue UI
+- send queue UI
+- send logs and reply tracking
+- smoke test for the SMS pipeline
+
+## Current prototype status
+
+Working locally:
+
+- daily draft JSON generation
+- SMS batch materialization
+- approval queue
+- approval-to-send transition
+- batch send flow
+- SMS API send path
 - reply status tracking
 - smoke test for the SMS pipeline
 
-## Tech used
+Known active improvement areas:
+
+- lead discovery quality still needs stronger source checks
+- messages can become too similar across leads and need better personalization rules
+- more robust deduplication is needed across batches and source files
+- production deployment is not the goal yet; this is a local operator-controlled prototype
+
+## Architecture
+
+```text
+Paperclip routines / agents
+        |
+        v
+Lead discovery + draft generation
+        |
+        v
+company/localreach/draft-approve/daily-sms-draft-prep.latest.json
+        |
+        v
+materialize-batch API
+        |
+        v
+company/localreach/batches/<batch_id>/sms_approval_queue.json
+        |
+        v
+Approval UI -> Send UI -> SMS API
+        |
+        v
+send logs + reply status
+```
+
+## Example SMS draft format
+
+```json
+{
+  "batch_id": "2026-04-27-sms-0830",
+  "generated_at": "2026-04-27T08:30:00Z",
+  "leads": [
+    {
+      "lead_id": "example-business-brno",
+      "company_name": "Example Business Brno",
+      "phone_e164": "+420777123456",
+      "channel": "sms",
+      "message": "Dobrý den, narazil jsem na Váš web a myslím, že by šel zjednodušit a lépe zpřehlednit. Mohu poslat krátký návrh modernější verze webu?",
+      "score": 8,
+      "niche": "služby",
+      "city": "Brno",
+      "source_url": "https://example.cz",
+      "recommended_priority": "medium"
+    }
+  ]
+}
+```
+
+## Safety and validation guards
+
+Before a batch can be materialized, the system should verify:
+
+- the JSON file is fresh
+- the batch contains real leads
+- phone numbers are valid E.164 numbers
+- placeholder phones are rejected
+- each lead has a non-empty SMS message
+- old test leads are not reused
+- already-sent leads are deduplicated
+
+The goal is not full autonomy. The goal is controlled automation with visible checks.
+
+## Local smoke test
+
+Run from the project directory:
+
+```bash
+cd /Users/open-claw/workspace/projects/localreach/LocalReach
+npx tsx scripts/smoke-test-sms-pipeline.ts
+```
+
+Expected result:
+
+```text
+[PASS] JSON updated today
+[PASS] No placeholder leads found
+[PASS] No placeholder phones found
+[PASS] All leads have messages
+[PASS] All phones valid E164
+[PASS] Materialize returned batch_id: <batch-id>
+Smoke test PASSED
+```
+
+## Tech stack
 
 - Next.js
 - TypeScript
 - Paperclip routines
-- OpenClaw / Codex agents
+- OpenClaw / Codex-style agents
 - Vonage SMS API
-- JSON-based workflow state
-- GitHub for versioning and documentation
+- JSON file-based workflow state
+- GitHub for documentation and version control
 
-## Current status
+## Main screens
 
-Working prototype. The system can generate SMS batches, materialize them into an approval queue, approve leads manually, send messages through the API, and track replies.
+Recommended screenshots to add:
 
+- `docs/screenshots/approval-queue.png`
+- `docs/screenshots/send-queue.png`
+- `docs/screenshots/paperclip-routines.png`
+- `docs/screenshots/smoke-test-pass.png`
+
+These should show the operator-controlled workflow: generated leads, approval, send queue, and validation.
+
+## What this demonstrates
+
+This project demonstrates ability to:
+
+- design an AI-assisted business workflow
+- connect agents with backend state
+- build guardrails around model output
+- create human-in-the-loop approval flows
+- debug real integration problems across UI, API routes, files, and scheduled routines
+- document a working prototype for review
 
 ## Limitations
 
-This is a prototype. Some parts are intentionally operator-controlled because automatic sending without human review would be risky.
+This is a local prototype, not a finished SaaS product.
+
+Main limitations:
+
+- source extraction is not yet reliable enough for unsupervised lead generation
+- lead quality depends on the available source data
+- SMS deliverability and reply rate require more real-world testing
+- UI is intentionally minimal
+- all sending should remain human-approved until the pipeline has stronger quality controls
+
+## Roadmap
+
+Next practical improvements:
+
+1. Improve lead discovery with stronger source validation and scoring.
+2. Add anti-similarity rules so SMS messages do not look templated.
+3. Add stronger batch deduplication across all prior sends.
+4. Add a dashboard showing reply rate, sent count, and conversion steps.
+5. Add screenshots and a short demo video for portfolio use.
+6. Package the workflow as a clearer case study for job applications.
